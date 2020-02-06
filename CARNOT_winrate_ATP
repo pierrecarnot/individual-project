@@ -77,68 +77,236 @@
       <h3>Interpretation</h3>
 
       <p>
-        Provide a brief discussion of how to interpret this visualization. Legends provided with the visualization can be self-explanatory, keep it short.
-     By combining the location of deaths related to cholera with locations of the water pumps, the map is able to show us that the majority were clustered around public water pump.
-the visualization show clearly a connection between location of water pump and the cluster of deaths (people was contaminated by public water).
+       By looking at the graph, we can clearly see that Djokovic, Federer and Nadal have respectively the best winrate
+       on the hard, grass and clay surface, whereas they have very close winrate together if you combine the 3 surfaces.
       </p>
 
       <h3>Discussion</h3>
 
       <p>
-        Provide a brief discussion of the key findings of the visualization, any challenges encountered creating the visualization etc.
-     I was pretty impressed about the power of folium module.
-The main challenge is to start using it, Once it's done, it becomes quickly a user friendly package with a really interesting items to visualize a map.
+       The starting data was already clean and prepared, the result of the analysis were extracted relatively simply.
+       I faced some difficulties to insert pictures at the right places, combining them with an arrow and knowing that my absciss
+       is not made of numbers (but surface names). 
+       I also asked myself if i would insert the winrate of Tsonga (player with relatively low winrate compared to the others), to
+       give the reader a better appreciation of the difference of winrates between TOP 3 ATP player and TOP20 ATP player. I found 
+       more interesting to just compare the 3 top players of the 2 last decades (56 grand slam won out of 65 by them since 2003).
       
       </p>
 
       <h3>Sources</h3>
+      
 
       <p>
-        Provide sources for the dataset, any code used, and design inspirations here. Dishonesty will result in a 0 for the assignment or the <strong>entire course</strong>.
-      Robin Wilson’s blog
-      OpenstreetMap
-      Datacamp
-        Code :
- import folium
- import pandas as pd
+        Code : <br/>
+ import numpy as np <br/>
+ import pandas as pd <br/>
+ import matplotlib.pyplot as plt <br/>
+ from matplotlib.offsetbox import TextArea, DrawingArea, OffsetImage, AnnotationBbox <br/>
+ import matplotlib.image as mpimg <br/> <br/> <br/>
+ 
+ 
+ #import data for all the ATP tournaments 2000-2020, extracted from dataworld <br/>
+ data = pd.read_csv(r"C:\Users\pierre\Desktop\msi\datavi\atp_matches_combined.csv", dtype='unicode') <br/>
+ data.head() <br/> <br/> <br/>
+ 
+ 
+ #FEDERER <br/>
+ #Extract all the wins on the different surfaces <br/>
+ hard_F_W = data[(data["winner"]  == "Federer R.") & (data["surface"]=="Hard") ] <br/>
+ grass_F_W = data[(data["winner"]  == "Federer R.") & (data["surface"]=="Grass") ]  <br/>
+ clay_F_W = data[(data["winner"]  == "Federer R.") & (data["surface"]=="Clay") ] <br/>
+ #count the wins <br/>
+ hard_F_W = len(hard_F_W) <br/>
+ grass_F_W = len(grass_F_W) <br/>
+ clay_F_W = len(clay_F_W) <br/>
+ #Extract all the loses on the different surfaces <br/>
+ hard_F_L = data[(data["loser"]  == "Federer R.") & (data["surface"]=="Hard") ] <br/>
+ grass_F_L = data[(data["loser"]  == "Federer R.") & (data["surface"]=="Grass") ] <br/>
+ clay_F_L = data[(data["loser"]  == "Federer R.") & (data["surface"]=="Clay") ] <br/>
+ #count the loses <br/>
+ hard_F_L = len(hard_F_L) <br/>
+ grass_F_L = len(grass_F_L) <br/>
+ clay_F_L = len(clay_F_L) <br/>
+ #calculate the winrate of Federer on the 3 different surfaces <br/>
+ WR_F_H = hard_F_W / (hard_F_W + hard_F_L) *100 <br/>
+ WR_F_G = grass_F_W / (grass_F_W + grass_F_L) *100 <br/>
+ WR_F_C = clay_F_W / (clay_F_W + clay_F_L) *100 <br/>
+ ALL_F = (WR_F_H+WR_F_G+WR_F_C)/3 <br/>
+ print(WR_F_H) <br/>
+ print(WR_F_G) <br/>
+ print(WR_F_C) <br/>
+ print(ALL_F) <br/> <br/> <br/>
+ 
+ 
+ #NADAL <br/>
+ #Same for Nadal datas <br/>
+ hard_N_W = data[(data["winner"]  == "Nadal R.") & (data["surface"]=="Hard") ] <br/>
+ grass_N_W = data[(data["winner"]  == "Nadal R.") & (data["surface"]=="Grass") ] <br/>
+ clay_N_W = data[(data["winner"]  == "Nadal R.") & (data["surface"]=="Clay") ] <br/>
+ hard_N_W = len(hard_N_W) <br/>
+ grass_N_W = len(grass_N_W) <br/>
+ clay_N_W = len(clay_N_W) <br/> <br/>
+ 
+ hard_N_L = data[(data["loser"]  == "Nadal R.") & (data["surface"]=="Hard") ] <br/>
+ grass_N_L = data[(data["loser"]  == "Nadal R.") & (data["surface"]=="Grass") ] <br/>
+ clay_N_L = data[(data["loser"]  == "Nadal R.") & (data["surface"]=="Clay") ] <br/>
+ hard_N_L = len(hard_N_L) <br/>
+ grass_N_L = len(grass_N_L) <br/>
+ clay_N_L = len(clay_N_L) <br/> <br/>
+ 
+ WR_N_H = hard_N_W / (hard_N_W + hard_N_L) *100 <br/>
+ WR_N_G = grass_N_W / (grass_N_W + grass_N_L) *100 <br/>
+ WR_N_C = clay_N_W / (clay_N_W + clay_N_L) *100 <br/>
+ ALL_N = (WR_N_H+WR_N_G+WR_N_C)/3 <br/>
+ print(WR_N_H) <br/>
+ print(WR_N_G) <br/>
+ print(WR_N_C) <br/>
+ print(ALL_N) <br/> <br/> <br/>
+ 
+ 
+ #Djokovic <br/>
+ #Same for Djokovic datas <br/>
+ hard_D_W = data[(data["winner"]  == "Djokovic N.") & (data["surface"]=="Hard") ] <br/>
+ grass_D_W = data[(data["winner"]  == "Djokovic N.") & (data["surface"]=="Grass") ] <br/>
+ clay_D_W = data[(data["winner"]  == "Djokovic N.") & (data["surface"]=="Clay") ] <br/>
+ hard_D_W = len(hard_D_W) <br/>
+ grass_D_W = len(grass_D_W) <br/>
+ clay_D_W = len(clay_D_W) <br/>
+ 
+ hard_D_L = data[(data["loser"]  == "Djokovic N.") & (data["surface"]=="Hard") ] <br/>
+ grass_D_L = data[(data["loser"]  == "Djokovic N.") & (data["surface"]=="Grass") ] <br/>
+ clay_D_L = data[(data["loser"]  == "Djokovic N.") & (data["surface"]=="Clay") ] <br/>
+ hard_D_L = len(hard_D_L) <br/>
+ grass_D_L = len(grass_D_L) <br/>
+ clay_D_L = len(clay_D_L) <br/> <br/>
+ 
+ WR_D_H = hard_D_W / (hard_D_W + hard_D_L) *100 <br/>
+ WR_D_G = grass_D_W / (grass_D_W + grass_D_L) *100 <br/>
+ WR_D_C = clay_D_W / (clay_D_W + clay_D_L) *100 <br/>
+ ALL_D = (WR_D_H+WR_D_G+WR_D_C)/3 <br/> <br/>
+ 
+ print(WR_D_H) <br/>
+ print(WR_D_G) <br/>
+ print(WR_D_C) <br/>
+ print(ALL_D) <br/> <br/> <br/> <br/>
+ 
+ 
+ 
+ #In this part, we draw the final graph: we want to draw the winrates according to the surface for the 3 players <br/> <br/>
 
-deaths=pd.read_csv('/Users/otb/Desktop/deaths.csv')
-deaths
-# Rename your columns
+ #Build the vectors of surfaces <br/>
+ x= ['Hard', "Grass", "Clay","ALL"] <br/>
+ #Vector of winrates for federer <br/>
+ y1= [WR_F_H, WR_F_G, WR_F_C, ALL_F] <br/>
+ #Vector of winrates for nadal <br/>
+ y2= [WR_N_H, WR_N_G, WR_N_C, ALL_N] <br/> 
+ #Vector of winrates for Djokovic <br/>
+ y3= [WR_D_H, WR_D_G, WR_D_C, ALL_D] <br/> <br/>
+ 
+ #create the fig, and the size of the  <br/>
+ fig, ax = plt.subplots(figsize=(20,10)) <br/> <br/>
 
-newcols = {
-    'Death': 'death_count',
-    'X coordinate': 'x_latitude', 
-    'Y coordinate': 'y_longitude' 
-    }
+ #Create the graph, each player winrate by surface <br/>
+ #Draw federer winrate points in triangle <br/>
+ plt.scatter(x,y1,marker='v') <br/>
+ #Draw Nadal winrate points in square <br/>
+ plt.scatter(x,y2,marker='s') <br/>
+ #Draw Djokovic winrate points in points <br/>
+ plt.scatter(x,y3) <br/> <br/>
+ 
+ #set the ordonate between 73% and 94% to have a better scale between the points <br/>
+ plt.ylim([73, 94]) <br/> <br/>
 
-deaths.rename(columns=newcols, inplace=True)
+ #Create graph legend <br/>
+ plot_series=['Federer','Nadal','Djokovic'] <br/>
+ ax.legend(plot_series, facecolor="w") <br/> <br/>
 
-locations = deaths[['x_latitude', 'y_longitude']]
-deaths_list = locations.values.tolist()
-deaths_list 
-map = folium.Map(location=[51.5132119,-0.13666], tiles='Stamen Toner', zoom_start=18)
-for point in range(0, len(deaths_list)):
-    folium.CircleMarker(deaths_list[point], radius=18, color='red', fill=True, fill_color='red', opacity = 0.4).add_to(map)
-map
-        
-# Import the data
-pumps = pd.read_csv('/Users/otb/Desktop/pumps.csv')
+ #create titles <br/>
+ plt.title('Winrate of Djokovic, Federer and Nadal for the ATP tour since January 2000 ',fontsize=16) <br/>
+ plt.xlabel('Surface',fontsize=14) <br/>
+ plt.ylabel('Winrate (%)',fontsize=14) <br/> <br/>
 
-# Subset the DataFrame 
-locations_pumps = pumps[['X coordinate', 'Y coordinate']]
+ #import pictures store on deskstop <br/>
+ grass = mpimg.imread(r'C:\Users\pierre\Desktop\msi\datavi\grass3.jpg') <br/>
+ hard = mpimg.imread(r'C:\Users\pierre\Desktop\msi\datavi\hard.jpg') <br/>
+ clay = mpimg.imread(r'C:\Users\pierre\Desktop\msi\datavi\clay.jpg') <br/>
+ atp = mpimg.imread(r'C:\Users\pierre\Desktop\msi\datavi\atp.png') <br/> <br/>
 
-# Transform the DataFrame to list of lists 
-pumps_list = locations_pumps.values.tolist()
+ #Create the box size and position of the pictures <br/>
+ imagebox = OffsetImage(grass, zoom=0.3) <br/>
+ abg = AnnotationBbox(imagebox, ('Grass', 74.5)) <br/> <br/>
 
-# Create a for loop (use previous map)
-map1 = map
-for point in range(0, len(pumps_list)):
-    folium.Marker(pumps_list[point], popup=pumps['Pump Name'][point]).add_to(map1)
-map1
+ imagebox2 = OffsetImage(clay, zoom=0.3) <br/>
+ abc = AnnotationBbox(imagebox2, ('Clay', 74.5)) <br/> <br/>
 
-#output Visualization on the link
-        
+ imagebox3= OffsetImage(hard, zoom=0.3) <br/>
+ abh = AnnotationBbox(imagebox3, ('Hard', 74.5)) <br/> <br/>
+ 
+ imagebox4= OffsetImage(atp, zoom=0.3) <br/>
+ aba = AnnotationBbox(imagebox4, ('ALL', 74.7)) <br/> <br/>
+
+ #Draw the boxes on the graph <br/>
+ ax.add_artist(abg) <br/>
+ ax.add_artist(abc) <br/>
+ ax.add_artist(abh) <br/>
+ ax.add_artist(aba) <br/> <br/> <br/><br/>
+
+
+
+ #import and put the picture of federer on the graph, with an arrow linked to the point <br/>
+ federer = mpimg.imread(r'C:\Users\pierre\Desktop\msi\datavi\federer.jpg') <br/>
+ xy = ('Grass', WR_F_G) <br/>
+ imagebox5 = OffsetImage(federer, zoom=0.4) <br/> <br/>
+
+ ab5 = AnnotationBbox(imagebox5, xy, <br/>
+                      xybox=(60,50), <br/>
+                      xycoords='data', <br/>
+                      boxcoords="offset points", <br/>
+                      pad=0.2, <br/>
+                      arrowprops=dict(arrowstyle="-", color="k", alpha=0.6, connectionstyle='arc3, rad=-0.2') <br/>
+                      ) <br/> <br/>
+
+ ax.add_artist(ab5) <br/> <br/> <br/> <br/>
+
+
+
+ #import and put the picture of Djokovic on the graph, with an arrow linked to the point <br/>
+ djokovic = mpimg.imread(r'C:\Users\pierre\Desktop\msi\datavi\djokovic.jpg') <br/>
+ xy2 = ('Hard', WR_D_H) <br/>
+ imagebox6 = OffsetImage(djokovic, zoom=0.8) <br/> <br/>
+
+ ab6 = AnnotationBbox(imagebox6, xy2, <br/>
+                      xybox=(60,50), <br/>
+                      xycoords='data', <br/>
+                      boxcoords="offset points", <br/>
+                      pad=0.1, <br/>
+                      arrowprops=dict(arrowstyle="-", color="k", alpha=0.6, connectionstyle='arc3, rad=-0.2') <br/>
+                      ) <br/> <br/>
+
+ ax.add_artist(ab6) <br/> <br/> <br/> <br/>
+
+
+
+ #import and put the picture of Nadal on the graph, with an arrow linked to the point <br/>
+ nadal = mpimg.imread(r'C:\Users\pierre\Desktop\msi\datavi\nadal.jpg') <br/>
+ xy3 = ('Clay', WR_N_C) <br/>
+ imagebox7 = OffsetImage(nadal, zoom=0.6) <br/> <br/>
+
+ ab7 = AnnotationBbox(imagebox7, xy3, <br/>
+                      xybox=(90,1), <br/>
+                      xycoords='data', <br/>
+                      boxcoords="offset points", <br/>
+                      pad=0.2, <br/>
+                      arrowprops=dict(arrowstyle="-", color="k", alpha=0.6, connectionstyle='arc3, rad=0.2') <br/>
+                      ) <br/> <br/>
+
+ ax.add_artist(ab7) <br/> <br/> <br/> <br/>
+
+
+
+ #save the graph into a png file <br/>
+ plt.savefig('winrate_by_surface.png') <br/> <br/>
+ 
       </p>
     </div>
   </section>
