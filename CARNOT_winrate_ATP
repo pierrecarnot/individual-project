@@ -72,7 +72,9 @@
       <!-- modify if necessary (move visualizations in separate pages) -->
       <h2 id="viz1">Visualization 1</h2>
 
-      https://raw.githubusercontent.com/pierrecarnot/individual-project/master/winrate_by_surface.png
+      <img src= "https://raw.githubusercontent.com/pierrecarnot/individual-project/master/winrate_by_surface.png"
+      
+      </img>
 
       <h3>Interpretation</h3>
 
